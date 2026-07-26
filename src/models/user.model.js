@@ -45,6 +45,7 @@ userSchema.methods.comparePassword = async function (password) {
   return await bcrypt.compare(password, this.password); //it'll give true false based on password
 };
 
+// user is collection's name
 const userModel = mongoose.model("user", userSchema);
 
 module.exports = userModel;

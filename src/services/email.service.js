@@ -1,4 +1,4 @@
-// got from github 
+// got from github
 require("dotenv").config();
 const nodemailer = require("nodemailer");
 
@@ -35,10 +35,10 @@ const sendEmail = async (to, subject, text, html) => {
       html, // html body
     });
 
-    console.log('Message sent: %s', info.messageId);
-    console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
+    console.log("Message sent: %s", info.messageId);
+    console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
   } catch (error) {
-    console.error('Error sending email:', error);
+    console.error("Error sending email:", error);
   }
 };
 
@@ -63,6 +63,84 @@ The Backend Ledger Team`;
   await sendEmail(userEmail, subject, text, html);
 }
 
-module.exports ={ sendRegistrationEmail}
+// fnx to send transaction notification email
+async function sendTransactionEmail(userEmail, name, amount, toAccount) {
+  const subject = "Transaction Successful - Backend Ledger";
 
+  const text = `Hello ${name},
 
+Your transaction has been completed successfully.
+
+Transaction Details:
+Amount: ₹${amount}
+Transferred To: ${toAccount}
+
+Thank you for using Backend Ledger.
+
+Best regards,
+The Backend Ledger Team`;
+
+  const html = `
+    <p>Hello ${name},</p>
+
+    <p>Your transaction has been completed successfully.</p>
+
+    <h3>Transaction Details</h3>
+    <ul>
+      <li><strong>Amount:</strong> ₹${amount}</li>
+      <li><strong>Transferred To:</strong> ${toAccount}</li>
+    </ul>
+
+    <p>Thank you for using <strong>Backend Ledger</strong>.</p>
+
+    <p>Best regards,<br>The Backend Ledger Team</p>
+  `;
+
+  await sendEmail(userEmail, subject, text, html);
+}
+
+// fnx to send failed transaction email
+async function sendFailedTransactionEmail(userEmail, name, amount, toAccount) {
+  const subject = "Transaction Failed - Backend Ledger";
+
+  const text = `Hello ${name},
+
+Unfortunately, your transaction could not be completed.
+
+Transaction Details:
+Amount: ₹${amount}
+Recipient: ${toAccount}
+
+No amount has been deducted from your account. Please verify the recipient details or try again later.
+
+If the problem persists, please contact our support team.
+
+Best regards,
+The Backend Ledger Team`;
+
+  const html = `
+    <p>Hello ${name},</p>
+
+    <p><strong>Your transaction could not be completed.</strong></p>
+
+    <h3>Transaction Details</h3>
+    <ul>
+      <li><strong>Amount:</strong> ₹${amount}</li>
+      <li><strong>Recipient:</strong> ${toAccount}</li>
+      <li><strong>Status:</strong> ❌ Failed</li>
+    </ul>
+
+    <p>No amount has been deducted from your account. Please verify the recipient details or try again later.</p>
+
+    <p>If the problem persists, please contact our support team.</p>
+
+    <p>Best regards,<br>The Backend Ledger Team</p>
+  `;
+
+  await sendEmail(userEmail, subject, text, html);
+}
+module.exports = {
+  sendRegistrationEmail,
+  sendTransactionEmail,
+  sendFailedTransactionEmail,
+};

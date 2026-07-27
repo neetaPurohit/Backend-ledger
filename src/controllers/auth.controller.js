@@ -98,7 +98,7 @@ async function userLoginController(req,res) {
        token,
      });
 
-     //7. after sending res. send registrationEmail
+     //7. after sending response. send registrationEmail
      await emailService.sendRegistrationEmail(user.email,user.name);
 
 }

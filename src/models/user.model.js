@@ -36,14 +36,15 @@ const userSchema = new mongoose.Schema(
 );
 
 userSchema.pre("save", async function (next) {
+  // If password NOT changed → skip hashing
   if (!this.isModified("password")) {
-    return
+    return;
   }
 
+  // If password changed → hash it
   const hash = await bcrypt.hash(this.password, 10);
   this.password = hash; //save that hashed password in db
-
-  return 
+  return;
 });
 
 userSchema.methods.comparePassword = async function (password) {
